@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <form action="{{ url_for('cadastrarUsuario') }}" method="POST">
+        
+        <label for="nome">Nome:</label><br>
+        <input type="text" id="nome" name="nome" required><br><br>
+
+        <label for="cpf">CPF:</label><br>
+        <input type="text" id="cpf" name="cpf" required><br><br>
+
+        <label for="email">Email Institucional:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="senha">Senha:</label><br>
+        <input type="password" id="senha" name="senha" required><br><br>
+
+        <label for="tipo_usuario">Tipo de Usuário:</label><br>
+        <select id="tipo_usuario" name="tipo_usuario" required>
+            <option value="bibliotecario">Bibliotecário</option>
+            <option value="professor">Professor</option>
+            <option value="aluno">Aluno</option>
+            <option value="admin">Admin</option>
+
+        </select><br><br>
+
+        <button type="submit">Cadastrar</button>
+        <a href="{{ url_for('painelAdmin') }}">voltar</a>
+        <a href="{{ url_for('sair') }}">Sair</a>
+
+</body>
+</html>

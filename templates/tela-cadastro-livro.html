@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <form action="{{ url_for('cadastrarLivro') }}" method="POST">
+        
+        <label for="autor">Autor:</label><br>
+        <input type="text" id="autor" name="autor" required><br><br>
+
+        <label for="titulo">Título:</label><br>
+        <input type="text" id="titulo" name="titulo" required><br><br>
+
+        <label for="isbn">ISBN:</label><br>
+        <input type="text" id="isbn" name="isbn" required><br><br>
+
+        <label for="editora">Editora:</label><br>
+        <input type="text" id="editora" name="editora" required><br><br>
+
+        <label for="assunto">Assunto:</label><br>
+        <input type="text" id="assunto" name="assunto" required><br><br>
+
+        <label for="edicao">Edição:</label><br>
+        <input type="text" id="edicao" name="edicao" required><br><br>
+
+        <button type="submit">Cadastrar</button>
+        <a href="{{ url_for('painelLib') }}">voltar</a>
+        <a href="{{ url_for('sair') }}">Sair</a>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <a href="{{ url_for('telaListarUsuario') }}">Listar Usuários</a>
+    <a href="{{ url_for('telaCadastroLivro') }}">Cadastrar Livro</a>
+    <a href="{{ url_for('sair') }}">Sair</a>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Autor</th>
+                <th>Título</th>
+                <th>ISBN</th>
+                <th>Editora</th>
+                <th>Assunto</th>
+                <th>Edição</th>
+                <th>Reserva</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% if livros %}
+                {% for livro in livros %}
+                <tr>
+                    <td>{{ livro.autor }}</td>
+                    <td>{{ livro.titulo }}</td>
+                    <td>{{ livro.isbn }}</td>
+                    <td>{{ livro.editora }}</td>
+                    <td>{{ livro.assunto }}</td>
+                    <td>{{ livro.edicao }}</td>
+                    <td>
+                        <form action="" method="POST">
+                            <button type="submit">Indisponibilizar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6">Nenhum livro cadastrado.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+</body>
+</html>

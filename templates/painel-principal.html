@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela Principal</title>
+</head>
+<body>
+
+    <h1>Bem-vindo</h1>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Autor</th>
+                <th>Título</th>
+                <th>ISBN</th>
+                <th>Editora</th>
+                <th>Assunto</th>
+                <th>Edição</th>
+                <th>Reserva</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% if livros %}
+                {% for livro in livros %}
+                <tr>
+                    <td>{{ livro.autor }}</td>
+                    <td>{{ livro.titulo }}</td>
+                    <td>{{ livro.isbn }}</td>
+                    <td>{{ livro.editora }}</td>
+                    <td>{{ livro.assunto }}</td>
+                    <td>{{ livro.edicao }}</td>
+                    <td>
+                        <form action="" method="POST">
+                            <button type="submit" onclick="alterarTextoReservar(this)">Reservar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6">Nenhum livro cadastrado.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('sair') }}">Sair</a>
+
+    <script>
+        // Função que altera o texto do botão para "Solicitação Enviada"
+        function alterarTextoReservar(button) {
+            button.innerHTML = 'Solicitação Enviada';
+            button.disabled = true;  // Desabilita o botão após a reserva
+            // Você pode adicionar aqui uma lógica de envio de dados se necessário
+            // Exemplo: enviar o formulário via AJAX ou recarregar a página.
+        }
+    </script>
+
+</body>
+</html>
