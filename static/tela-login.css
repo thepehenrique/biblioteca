@@ -1,99 +1,86 @@
-* {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-}
-
-.container {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f9;
+/* Estilo para o corpo da página */
+body {
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
     height: 100vh;
-    flex-direction: column;
 }
 
-h2 {
-    color: #333;
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-
-form {
-    background-color: white;
+/* Container do formulário */
+.container {
+    background-color: #ffffff;
     padding: 30px;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
     text-align: center;
 }
 
-
-label {
-    font-size: 14px;
-    color: #555;
-    display: block;
+/* Título do formulário */
+h2 {
+    margin-bottom: 20px;
+    color: #333;
 }
 
-/* input[type="email"],
-input[type="password"] {
+/* Estilo dos rótulos */
+label {
+    display: block;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+/* Estilo dos campos de entrada */
+input[type="email"], input[type="password"] {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
+    border-radius: 4px;
     box-sizing: border-box;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s ease;
 }
 
-input[type="email"]:focus,
-input[type="password"]:focus {
-    border-color: #4e73df;
+input[type="email"]:focus, input[type="password"]:focus {
+    border-color: #4CAF50;
     outline: none;
 }
 
-button {
+/* Estilo para os botões */
+button[type="submit"], button[type="button"] {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 10px;
-    background-color: #4e73df;
+    background-color: #4CAF50;
     color: white;
+    padding: 10px;
     border: none;
-    border-radius: 5px;
-    font-size: 14px;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #2e59d9;
-}
-
-a {
-    text-decoration: none;
-    display: block;
+    font-size: 16px;
     margin-top: 10px;
-    color: #4e73df;
-    font-size: 14px;
+    transition: background-color 0.3s ease;
 }
 
-a:hover {
-    text-decoration: underline;
+/* Efeito hover para os botões */
+button[type="submit"]:hover, button[type="button"]:hover {
+    background-color: #45a049;
 }
 
-button[type="button"] {
-    background-color: #f8f9fc;
-    color: #333;
-    border: 1px solid #ccc;
+/* Estilo para o link de "Esqueci a senha" */
+a.senha {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
 }
 
-button[type="button"]:hover {
-    background-color: #e9ecef;
+/* Efeito hover para o link "Esqueci a senha" */
+a.senha:hover {
+    color: #388e3c;
 }
-
-  */
