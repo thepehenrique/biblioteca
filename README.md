@@ -17,6 +17,6 @@ para rodar siga as etapas =>
 abra o terminal cmd
 
 passo 1 - cd .venv | 
-passo 2 - cd Scripts| 
-passo 3 - activate| 
+passo 2 - cd Scripts | 
+passo 3 - activate | 
 passo 4 - python app.py (executa o projeto)
