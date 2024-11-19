@@ -11,6 +11,9 @@ Satisfazem 5 funcionalidades
 3.     Cadastrar Perfil;
 4.     Cadastrar livro;
 5.     Reservar Livro;
+6.     Indisponibilizar Livro;
+
+
 
 para rodar siga as etapas =>
 
