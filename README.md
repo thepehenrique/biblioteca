@@ -4,7 +4,7 @@ Python - Flask - SqlAlchemy
 
 Para visualizar o banco baixar o app SQLiteStudio
 
-Satisfazem 5 funcionalidades
+Satisfazem 8 funcionalidades
 
 1.     Cadastrar Usuário;
 2.     Efetuar Login;
