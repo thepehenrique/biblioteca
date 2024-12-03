@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitações de Reserva</title>
+</head>
+<body>
+
+<h1>Solicitações de Reserva</h1>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Nome do Usuário</th>
+            <th>Título do Livro</th>
+            <th>Status da Solicitação</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if reservas %}
+            {% for reserva in reservas %}
+            <tr>
+                <td>{{ reserva.usuario.nome }}</td>
+                <td>{{ reserva.livro.titulo }}</td>
+                <td>{{ reserva.status }}</td>
+                <td>
+                    {% if reserva.status == 'pendente' %}
+                    <form action="{{ url_for('gerenciar_reserva', reserva_id=reserva.id, acao='aceitar') }}" method="POST">
+                        <button type="submit">Aceitar</button>
+                    </form>
+                    <form action="{{ url_for('gerenciar_reserva', reserva_id=reserva.id, acao='recusar') }}" method="POST">
+                        <button type="submit">Recusar</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="4">Nenhuma solicitação pendente.</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -7,10 +7,14 @@
     <title>Document</title>
 </head>
 <body>
-    
-    <a href=#>Listar Usuários</a>
-    <a href="{{ url_for('telaCadastroLivro') }}">Cadastrar Livro</a>
-    <a href="{{ url_for('sair') }}">Sair</a>
+    <div class="nav-links">
+
+        <a href="{{ url_for('listarUsuarios') }}">Listar Usuários</a>
+        <a href="{{ url_for('painelSolicitacoes') }}">Solicitações</a>
+        <a href="{{ url_for('telaCadastroLivro') }}">Cadastrar Livro</a>
+        <a href="{{ url_for('sair') }}">Sair</a>
+
+    </div>
 
     <table border="1">
         <thead>
@@ -36,10 +40,18 @@
                     <td>{{ livro.assunto }}</td>
                     <td>{{ livro.edicao }}</td>
                     <td>
-                        <form action="" method="POST">
-                            <button type="submit">Indisponibilizar</button>
-                        </form>
+                        {% if livro.disponivel %}
+                            <form action="{{ url_for('indisponibilizarLivro', livro_id=livro.id) }}" method="POST">
+                                <button type="submit">Indisponibilizar</button>
+                            </form>
+                        {% else %}
+                            <form action="{{ url_for('disponibilizarLivro', livro_id=livro.id) }}" method="POST">
+                                <button type="submit">Disponibilizar</button>
+                            </form>
+                        {% endif %}
                     </td>
+                    
+                    
                 </tr>
                 {% endfor %}
             {% else %}

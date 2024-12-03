@@ -24,6 +24,7 @@ class Usuario(db.Model):
     cpf = db.Column(db.String(11), nullable=False)
     senha = db.Column(db.String(200), nullable=False)
     tipo_usuario = db.Column(db.String(10), default='aluno')
+    status = db.Column(db.Boolean, default=False)  # Status (True ou False)
 
 class Aluno(Usuario):
     __tablename__ = 'aluno'
@@ -46,10 +47,31 @@ class Livro(db.Model):
     editora = db.Column(db.String(100), nullable=False)
     assunto = db.Column(db.String(100), nullable=False)
     edicao = db.Column(db.String(20), nullable=False)
+    data_inclusao = db.Column(db.DateTime, default=datetime.utcnow)  # Data de inclusão
+    disponivel = db.Column(db.Boolean, default=True)  # Disponibilidade (True ou False)
+    reservado = db.Column(db.Boolean, default=False)  # Novo campo para indicar se o livro foi reservado
 
+class Reserva(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    livro_id = db.Column(db.Integer, db.ForeignKey('livro.id'))
+    livro = db.relationship('Livro', backref='reservas')
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
+    usuario = db.relationship('Usuario', backref='reservas')
+    status = db.Column(db.String(20), default='pendente')  # Pode ser 'pendente', 'aceito', ou 'recusado'
+
+    def __init__(self, livro_id, usuario_id):
+        self.livro_id = livro_id
+        self.usuario_id = usuario_id
+        self.status = 'pendente'
+
+    
+
+"""
     # Relacionamento com Exemplares
     exemplares = db.relationship('Exemplar', backref='livro', lazy=True)
+"""
 
+"""
 # Modelo de Exemplar
 class Exemplar(db.Model):
     __tablename__ = 'exemplar'
@@ -66,7 +88,7 @@ class Exemplar(db.Model):
         self.livro_id = livro_id
         self.disponivel = disponivel
         self.reservado = False  # Inicialmente, não está reservado
-
+"""
 
 # Criação do banco de dados
 with app.app_context():
@@ -79,6 +101,16 @@ with app.app_context():
 @app.route('/painel-admin')
 def painelAdmin():
     return render_template('painel-admin.html')
+
+@app.route('/lib-solicitacoes')
+def painelSolicitacoes():
+    usuarios = Usuario.query.all()  # Buscando todos os usuários
+    return render_template('lib-solicitacoes.html', usuarios=usuarios)
+
+@app.route('/listar-usuarios')
+def listarUsuarios():
+    usuarios = Usuario.query.all()  # Buscando todos os usuários
+    return render_template('lib-usuarios.html', usuarios=usuarios)
 
 @app.route('/painel-lib')
 def painelLib():
@@ -108,11 +140,26 @@ def telaLogin():
         return entrar()  # Chama a função de login
     return render_template('tela-login.html')
 
+'''
+@app.route('/solicitacoes-reserva')
+def solicitacoes_reserva():
+    reservas = Reserva.query.filter_by(status='pendente').all()
+    return render_template('solicitacoes-reserva.html', reservas=reservas)
+'''
+
 @app.route('/sair')
 def sair():
     session.pop('usuario_id', None)
     flash('Você saiu do sistema.', 'success')
     return redirect(url_for('telaLogin'))
+
+@app.route('/lib/solicitacoes', methods=['GET'])
+def lib_solicitacoes():
+    # Obter todas as reservas pendentes
+    reservas_pendentes = Reserva.query.filter_by(status='pendente').all()
+    
+    return render_template('lib-solicitacoes.html', reservas=reservas_pendentes)
+
 
 ############################################################################################################################
 
@@ -177,7 +224,7 @@ def cadastrarLivro():
         return redirect(url_for('painelLib'))
 
     return render_template('tela-cadastro-livro.html')
-
+'''
 @app.route('/entrar', methods=['POST'])
 def entrar():
     email = request.form['email']
@@ -218,6 +265,165 @@ def entrar():
     else:
         flash('Email inválido.', 'error')
         return redirect(url_for('telaLogin'))
+'''
+
+@app.route('/entrar', methods=['POST'])
+def entrar():
+    email = request.form['email']
+    senha = request.form['senha']
+
+    usuario = Usuario.query.filter_by(email=email).first()
+    if usuario:
+        if usuario.status:  # Verifica se o usuário está bloqueado
+            flash('Seu acesso está bloqueado. Entre em contato com o administrador.', 'error')
+            return redirect(url_for('telaLogin'))
+        if usuario.senha == senha:
+            session['usuario_id'] = usuario.id
+            flash(f'Bem-vindo, {usuario.email}!', 'success')
+
+            # Redireciona com base no tipo de usuário
+            if email.endswith('@aluno-faeterj.com') or email.endswith('@prof-faeterj.com'):
+                return redirect(url_for('painelPrincipal'))
+            elif email.endswith('@admin-faeterj.com'):
+                return redirect(url_for('painelAdmin'))
+            elif email.endswith('@lib-faeterj.com'):
+                return redirect(url_for('painelLib'))
+        else:
+            flash('Email ou senha incorretos.', 'error')
+    else:
+        flash('Email não encontrado.', 'error')
+    return redirect(url_for('telaLogin'))
+
+
+@app.route('/disponibilizar-livro/<int:livro_id>', methods=['POST'])
+def disponibilizarLivro(livro_id):
+    livro = Livro.query.get(livro_id)
+    if livro:
+        livro.disponivel = True
+        db.session.commit()
+        flash(f'O livro "{livro.titulo}" foi marcado como disponível.', 'success')
+    else:
+        flash('Livro não encontrado.', 'error')
+    return redirect(url_for('painelLib'))
+
+@app.route('/indisponibilizar-livro/<int:livro_id>', methods=['POST'])
+def indisponibilizarLivro(livro_id):
+    livro = Livro.query.get(livro_id)
+    if livro:
+        livro.disponivel = False
+        db.session.commit()
+        flash(f'O livro "{livro.titulo}" foi marcado como indisponível.', 'success')
+    else:
+        flash('Livro não encontrado.', 'error')
+    return redirect(url_for('painelLib'))
+
+'''
+@app.route('/bloquear-usuario/<int:usuario_id>', methods=['POST'])
+def bloquearUsuario(usuario_id):
+    usuario = Usuario.query.get(usuario_id)
+    if usuario:
+        usuario.status = True  # Marcando como bloqueado
+        db.session.commit()
+        flash(f'O usuário "{usuario.nome}" foi marcado como bloqueado.', 'success')
+    else:
+        flash('Usuário não encontrado.', 'error')
+    return redirect(url_for('listarUsuarios'))
+
+@app.route('/desbloquear-usuario/<int:usuario_id>', methods=['POST'])
+def desbloquearUsuario(usuario_id):
+    usuario = Usuario.query.get(usuario_id)
+    if usuario:
+        usuario.status = False  # Marcando como desbloqueado
+        db.session.commit()
+        flash(f'O usuário "{usuario.nome}" foi marcado como desbloqueado.', 'success')
+    else:
+        flash('Usuário não encontrado.', 'error')
+    return redirect(url_for('listarUsuarios'))
+'''
+
+@app.route('/bloquear-usuario/<int:usuario_id>', methods=['POST'])
+def bloquearUsuario(usuario_id):
+    usuario = Usuario.query.get(usuario_id)
+    if usuario:
+        usuario.status = True  # Marcando como bloqueado
+        db.session.commit()
+        flash(f'O usuário "{usuario.nome}" foi bloqueado com sucesso.', 'success')
+    else:
+        flash('Usuário não encontrado.', 'error')
+    return redirect(url_for('listarUsuarios'))
+
+@app.route('/desbloquear-usuario/<int:usuario_id>', methods=['POST'])
+def desbloquearUsuario(usuario_id):
+    usuario = Usuario.query.get(usuario_id)
+    if usuario:
+        usuario.status = False  # Marcando como desbloqueado
+        db.session.commit()
+        flash(f'O usuário "{usuario.nome}" foi desbloqueado com sucesso.', 'success')
+    else:
+        flash('Usuário não encontrado.', 'error')
+    return redirect(url_for('listarUsuarios'))
+
+
+@app.route('/solicitar-reserva/<int:livro_id>', methods=['POST'])
+def solicitar_reserva(livro_id):
+    if 'usuario_id' not in session:
+        flash('Você precisa estar logado para reservar um livro.', 'error')
+        return redirect(url_for('telaLogin'))
+
+    usuario_id = session['usuario_id']
+    livro = Livro.query.get_or_404(livro_id)
+
+    if not livro.disponivel:
+        flash('O livro não está disponível para reserva.', 'error')
+        return redirect(url_for('painelPrincipal'))
+
+    # Criar solicitação de reserva
+    reserva = Reserva(livro_id=livro.id, usuario_id=usuario_id)
+    db.session.add(reserva)
+    db.session.commit()
+
+    flash('Solicitação de reserva enviada com sucesso!', 'success')
+    return redirect(url_for('painelPrincipal'))
+
+'''
+
+@app.route('/gerenciar-reserva/<int:reserva_id>/<string:acao>', methods=['POST'])
+def gerenciar_reserva(reserva_id, acao):
+    reserva = Reserva.query.get_or_404(reserva_id)
+
+    if acao == 'aceitar':
+        reserva.status = 'aceito'
+        reserva.livro.disponivel = False  # O livro não está mais disponível
+    elif acao == 'recusar':
+        reserva.status = 'recusado'
+        reserva.livro.disponivel = True  # O livro volta a estar disponível
+
+    db.session.commit()
+
+    flash(f'Solicitação {acao} com sucesso!', 'success')
+    return redirect(url_for('lib_solicitacoes'))  # Redireciona para a página de solicitações
+
+
+
+@app.route('/reservar_livro/<int:livro_id>', methods=['POST'])
+def reservar_livro(livro_id):
+    livro = Livro.query.get_or_404(livro_id)
+    usuario = current_user  # Assume que você está usando um sistema de autenticação com `current_user`
+
+    if livro.disponivel:  # Verifica se o livro está disponível
+        nova_reserva = Reserva(livro_id=livro.id, usuario_id=usuario.id)
+        db.session.add(nova_reserva)
+        livro.disponivel = False  # Marca o livro como não disponível
+        db.session.commit()
+
+        flash('Solicitação de reserva enviada com sucesso!', 'success')
+    else:
+        flash('Este livro não está disponível para reserva no momento.', 'danger')
+
+    return redirect(url_for('painel_livros'))  # Redireciona de volta para a tela de livros
+
+'''
+
 
 
 ############################################################################################################################

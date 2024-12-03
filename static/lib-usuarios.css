@@ -81,9 +81,10 @@ tbody tr td[colspan="6"] {
     padding: 20px;
 }
 
-/* Estilo para o botão de Indisponibilizar */
+
+/* Estilo para o botão de Indisponibilizar 
 button {
-    background-color: #f44336; /* Cor de destaque em vermelho */
+    background-color: #f44336; /* Cor de destaque em vermelho 
     color: white;
     border: none;
     padding: 8px 12px;
@@ -92,7 +93,10 @@ button {
     border-radius: 4px;
 }
 
-/* Efeito de hover no botão */
+/* Efeito de hover no botão 
 button:hover {
     background-color: #e53935;
 }
+
+*/
+

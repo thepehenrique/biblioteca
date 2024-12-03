@@ -19,6 +19,7 @@
                 <th>Editora</th>
                 <th>Assunto</th>
                 <th>Edição</th>
+                <th>Status</th> <!-- Coluna para exibir o status -->
                 <th>Reserva</th>
 
             </tr>
@@ -34,18 +35,23 @@
                     <td>{{ livro.assunto }}</td>
                     <td>{{ livro.edicao }}</td>
                     <td>
-                        <form action="" method="POST">
+                        <!-- Verifica se o livro está disponível e exibe o status -->
+                        {{ 'Reservado' if not livro.disponivel else 'Disponível' }}
+                    </td>
+                    <td>
+                        <form action="{{ url_for('solicitar_reserva', livro_id=livro.id) }}" method="POST">
                             <button type="submit" onclick="alterarTextoReservar(this)">Reservar</button>
                         </form>
-                    </td>
+                    </td> <!-- Adicionado dentro do <td> -->
                 </tr>
                 {% endfor %}
             {% else %}
                 <tr>
-                    <td colspan="6">Nenhum livro cadastrado.</td>
+                    <td colspan="8">Nenhum livro cadastrado.</td> <!-- Corrigido colspan para incluir nova coluna -->
                 </tr>
             {% endif %}
         </tbody>
+        
     </table>
 
     <a href="{{ url_for('sair') }}">Sair</a>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/lib-usuarios.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="nav-links">
+        <a href="{{ url_for('painelSolicitacoes') }}">Solicitações</a>
+        <a href="{{ url_for('telaCadastroLivro') }}">Cadastrar Livro</a>
+        <a href="{{ url_for('sair') }}">Sair</a>
+    </div>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Cpf</th>
+                <th>Tipo de Usuário</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if usuarios %}
+                {% for usuario in usuarios %}
+                <tr>
+                    <td>{{ usuario.nome }}</td>
+                    <td>{{ usuario.cpf }}</td>
+                    <td>{{ usuario.tipo_usuario }}</td>
+                    <td>{{ usuario.status }}</td>
+
+                    <td>
+                        {% if not usuario.status %}
+                            <form action="{{ url_for('bloquearUsuario', usuario_id=usuario.id) }}" method="POST">
+                                <button type="submit">Bloquear</button>
+                            </form>
+                        {% else %}
+                            <form action="{{ url_for('desbloquearUsuario', usuario_id=usuario.id) }}" method="POST">
+                                <button type="submit">Desbloquear</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                    
+
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4">Nenhum Usuário Cadastrado.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+</body>
+</html>
