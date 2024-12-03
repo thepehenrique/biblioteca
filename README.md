@@ -12,6 +12,8 @@ Satisfazem 5 funcionalidades
 4.     Cadastrar livro;
 5.     Reservar Livro;
 6.     Indisponibilizar Livro;
+7.     Bloquear Usuário
+8.     Desbloquear Usuário
 
 
 
